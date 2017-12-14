@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -21,7 +22,33 @@ import javax.swing.border.BevelBorder;
  * @author Trykson
  */
 public class MyOwnDictionary extends javax.swing.JFrame {
+    
+    static String username, password, addres, port,databaseName;
 
+   static public void setUsername(String username) {
+        MyOwnDictionary.username = username;
+    }
+
+   static public void setPassword(String password) {
+        MyOwnDictionary.password = password;
+    }
+
+
+   static public void setAddres(String addres) {
+        MyOwnDictionary.addres = addres;
+    }
+
+   static public void setPort(String port) {
+        MyOwnDictionary.port = port;
+    }
+
+   static public void setDatabaseName(String databaseName) {
+        MyOwnDictionary.databaseName = databaseName;
+    }
+  Connection con;
+    Statement stmt;
+    String SQL = "SELECT * FROM Workers";
+    ResultSet rs;
     /**
      * Creates new form MyOwnDictionary
      */
@@ -38,29 +65,22 @@ public class MyOwnDictionary extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        jBloggin = new javax.swing.JButton();
+        jTextID = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Username");
-
-        jLabel2.setText("Password");
-
-        jPasswordField1.setText("jPasswordField1");
-
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jBloggin.setText("Login");
+        jBloggin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jBlogginActionPerformed(evt);
             }
         });
+
+        jTextID.setText("ID");
 
         jMenu2.setText("Options");
 
@@ -81,48 +101,79 @@ public class MyOwnDictionary extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextField1)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)))
-                .addGap(0, 205, Short.MAX_VALUE))
+                .addGap(81, 81, 81)
+                .addComponent(jBloggin, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82)
+                .addComponent(jTextID, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addGap(324, 324, 324))
+                .addGap(151, 151, 151)
+                .addComponent(jBloggin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     public void DoConnect() {
+        try {
+
+            String host;
+            host = "jdbc:derby://"+addres+":"+port+"/"+databaseName;
+            
+            con = DriverManager.getConnection(host, username, password);
+           
+
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+            rs = stmt.executeQuery(SQL);
+
+            rs.next();
+            Integer idint;
+            idint = rs.getInt("ID");
+            
+            jTextID.setText(Integer.toString(idint));
+           
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MyOwnDictionary.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
-         JFrame frame = new JFrame("Popup Menu Example");
+//         JFrame frame = new JFrame("Popup Menu Example");
+//
+//           frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//    frame.setSize(300, 300);
+//    frame.setVisible(true);
 
-           frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    frame.setSize(300, 300);
-    frame.setVisible(true);
+LoginWindow lw = new LoginWindow();
+lw.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jBlogginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBlogginActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+//            addres = jTextServer.getText();
+//            port = jTextPort.getText();
+//            databaseName = jTextDatabaseName.getText();
+//            
+//            host = "jdbc:derby://"+addres+":"+port+"/"+databaseName;
+//        
+//          username  = jTextFieldUsername.getText();
+//          password = jPassField.getText();
+          DoConnect();
+            
+        
+    }//GEN-LAST:event_jBlogginActionPerformed
+
+   
 
     /**
      * @param args the command line arguments
@@ -160,13 +211,10 @@ public class MyOwnDictionary extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton jBloggin;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextID;
     // End of variables declaration//GEN-END:variables
 }
